@@ -1,14 +1,16 @@
 from fastapi import FastAPI
 
 from app.api.health import router as health_router
-from app.config.config import get_settings
+from app.config.config import settings  
 
-settings = get_settings()
+from app.schemas.film import Filmcreate, FilmResponse
+
+
 
 app = FastAPI(
-title=settings.app_name,
-version=settings.app_version,
-debug=settings.debug,
+    title=settings.app_name,
+    version=settings.app_version,
+    debug=settings.debug,
 )
 
 app.include_router(health_router)
@@ -18,7 +20,7 @@ app.include_router(health_router)
 def root():
     return {"message": f"{settings.app_name} is running"}
 
-from app.schemas.film import Filmcreate, FilmResponse
+
 @app.post("/films", response_model=FilmResponse)
 def create_film(film: Filmcreate):
     return {
