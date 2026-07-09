@@ -1,24 +1,29 @@
 
 from functools import lru_cache
-from pydantic_settings import SettingsConfigDict, BaseSettings
+from pathlib import Path
+
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
-class Settings(BaseSettings):
-    app_name: str = "FullStack API"
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+PROJECT_ENV_FILE = PROJECT_ROOT / ".env"
+
+
+class settings(BaseSettings):
+    app_name: str = "api"
     app_version: str = "0.1.0"
     debug: bool = True
     host: str = "127.0.0.1"
     port: int = 8000
-    
     database_url: str = "sqlite:///./database.db"
 
-model_config = SettingsConfigDict(
-    env_file=".env",
-    env_file_encoding="utf-8",
-    extra="ignore",
-)
+    model_config = SettingsConfigDict(
+        env_file=PROJECT_ENV_FILE,
+        env_file_encoding="utf-8",
+        extra="ignore",
+    )
 
-def get_settings() -> Settings:
-    return Settings()
 
-settings = get_settings()
+@lru_cache
+def get_settings() -> settings:
+    return settings()
