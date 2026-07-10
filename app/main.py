@@ -1,5 +1,11 @@
 from fastapi import FastAPI
 
+import sys
+
+from pathlib import Path
+
+import uvicorn
+
 from app.api.health import router as health_router
 
 from app.config.config import get_settings
@@ -10,11 +16,13 @@ from app.database import Base, engine
 
 from app.handlers.films import router as films_router
 from app.handlers.genres import router as genres_router 
+from app.handlers.auth import router as auth_router
+from app.handlers.users import router as users_router
 
 from app.models.film import Film
+from app.models.user import User
+from app.models.genre import Genre
 
-
-from app.database import Base, engine
 settings = get_settings()
 Base.metadata.create_all(bind=engine)
 
@@ -24,30 +32,17 @@ app = FastAPI(
     debug=settings.debug,
 )
 
+app.include_router(films_router)
+app.include_router(genres_router)  
+app.include_router(users_router)
 app.include_router(health_router)
-@app.get("/")
+app.include_router(auth_router)
 
+@app.get("/")
 def root():
     return {"message": f"{settings.app_name} is running"}
 
-
-@app.post("/films", response_model=FilmResponse)
-def create_film(film:FilmCreate):
-    return {
-        "id": 1,
-        "title": film.title,
-        "description": film.description,
-    }
+if __name__ == '__main__':
+    uvicorn.run(app, host="0.0.0.0", port=8000)
 
 
-
-app = FastAPI()
-
-Base.metadata.create_all(bind=engine)
-
-app.include_router(films_router)
-app.include_router(genres_router)  
-
-@app.get("/")
-def root():
-    return {"message": "Hello World"}

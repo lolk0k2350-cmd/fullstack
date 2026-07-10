@@ -9,13 +9,16 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 PROJECT_ENV_FILE = PROJECT_ROOT / ".env"
 
 
-class settings(BaseSettings):
-    app_name: str = "api"
+class Settings(BaseSettings):
+    app_name: str
     app_version: str = "0.1.0"
     debug: bool = True
     host: str = "127.0.0.1"
     port: int = 8000
     database_url: str = "sqlite:///./database.db"
+    secret_key: str = "change-me"
+    algorithm: str = "HS256"
+    access_token_expire_minutes: int = 30
 
     model_config = SettingsConfigDict(
         env_file=PROJECT_ENV_FILE,
@@ -25,5 +28,5 @@ class settings(BaseSettings):
 
 
 @lru_cache
-def get_settings() -> settings:
-    return settings()
+def get_settings() -> Settings:
+    return Settings()
