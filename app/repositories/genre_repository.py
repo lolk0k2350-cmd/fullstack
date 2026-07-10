@@ -16,3 +16,13 @@ class GenreRepository:
 
     def get_by_id(self, genre_id: int) -> Genre | None:
         return self.db.query(Genre).filter(Genre.id == genre_id).first()
+    
+    def delete(self, film: Genre) -> None:
+        self.db.delete(Genre)
+        self.db.commit()
+
+    def update(self, genre: Genre) -> Genre:
+        self.db.add(genre)
+        self.db.commit()
+        self.db.refresh(genre)
+        return genre

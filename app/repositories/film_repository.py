@@ -10,11 +10,6 @@ class FilmRepository:
         self.db.commit()
         self.db.refresh(film)
         return film
-    def _upsert(self, film: Film) -> Film:
-        self.db.add(film)
-        self.db.commit()
-        self.db.refresh(film)
-        return film
 
     def get_all(self) -> list[Film]:
         return self.db.query(Film).all()
