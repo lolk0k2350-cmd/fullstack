@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict
 from typing import Optional
 
 class FilmCreate(BaseModel):
@@ -7,9 +7,10 @@ class FilmCreate(BaseModel):
     genre_ids: list[int]  
 
 class FilmResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
     id: int
     title: str
-    description: str
+    description: str | None = None
     genres: list[dict]  
 class FilmUpdate(BaseModel):
     title: str | None = Field(default=None, min_length=1, max_length=200)

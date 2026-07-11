@@ -5,7 +5,7 @@ class GenreCreate(BaseModel):
     description: str | None = None
 
 class GenreResponse(BaseModel):
-    id: int
+    model_config = ConfigDict(from_attributes=True)
     name: str
     description: str | None = None
     
