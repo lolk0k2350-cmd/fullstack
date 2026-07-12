@@ -19,6 +19,7 @@ from app.handlers.genres import router as genres_router
 from app.handlers.auth import router as auth_router
 from app.handlers.users import router as users_router
 from app.handlers.reviews import router as reviews_router
+from app.handlers.profile import router as profile_router
 from app.models.film import Film
 from app.models.user import User
 from app.models.genre import Genre
@@ -38,6 +39,7 @@ app.include_router(users_router)
 app.include_router(health_router)
 app.include_router(auth_router)
 app.include_router(reviews_router)
+app.include_router(profile_router)
 
 @app.get("/")
 def root():

@@ -6,6 +6,9 @@ from app.auth import get_current_user
 from app.models.user import User
 from app.schemas.profile import ProfileCreate, ProfileResponse, ProfileUpdate
 from app.services.profile_service import ProfileService
+from app.schemas.review import ReviewResponse
+from app.services.review_service import ReviewService
+
 
 router = APIRouter(
     prefix="/profile",
@@ -15,6 +18,8 @@ router = APIRouter(
 
 def get_profile_service(db: Session = Depends(get_db)) -> ProfileService:
     return ProfileService(db)
+def get_review_service(db:Session = Depends(get_db)) -> ReviewService:
+    return ReviewService(db)
 
 
 @router.post(

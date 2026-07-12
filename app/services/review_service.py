@@ -5,7 +5,7 @@ from app.models.review import Review
 from app.repositories.review_repository import ReviewRepository
 from app.repositories.film_repository import FilmRepository
 from app.repositories.user_repository import UserRepository
-from app.schemas.review import ReviewCreate, ReviewUpdate
+from app.schemas.review import ReviewCreate, ReviewUpdate, ReviewResponse
 
 
 class ReviewService:
@@ -79,6 +79,20 @@ class ReviewService:
             "film_id": review.film_id,
             "user_id": review.user_id,
         }
+
+    def get_reviews_by_user(self, user_id: int) -> list[dict]:
+        reviews = self.review_repo.get_by_user(user_id)
+        return [
+        {
+            "id": r.id,
+            "text": r.text,
+            "rating": r.rating,
+            "created_at": r.created_at,
+            "film_id": r.film_id,
+            "user_id": r.user_id,
+        }
+        for r in reviews
+    ]
 
     def update_review(self, review_id: int, schema: ReviewUpdate, user_id: int) -> dict:
         review = self.review_repo.get_by_id(review_id)
