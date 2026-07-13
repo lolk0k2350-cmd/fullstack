@@ -17,6 +17,7 @@ class Film(Base):
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     title: Mapped[str] = mapped_column(String, nullable=False)
     description: Mapped[str] = mapped_column(String, nullable=True)
+    poster_url: Mapped[str] = mapped_column(String(500), nullable=True)
 
     genres: Mapped[list["Genre"]] = relationship(
         secondary=film_genre,
