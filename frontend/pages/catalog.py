@@ -1,25 +1,25 @@
 import streamlit as st
 import requests
-from api.client import register, get_error_message
+from api.client import get_films, get_error_message
+from components.film_card import render_film_card
+from auth.state import is_admin
 
-st.header("Регистрация")
-with st.form("reg_form"):
-    email = st.text_input("Email")
-    password = st.text_input("Пароль", type="password")
-    submitted = st.form_submit_button("Зарегистрироваться")
+st.header("Все фильмы")
+if is_admin() and st.button("Добавить фильм"):
+    st.switch_page("pages/create_film.py")
 
-if submitted:
-    if not email or not password:
-        st.error("Заполните все поля")
-    elif len(password) < 6:
-        st.error("Пароль минимум 6 символов")
+try:
+    resp = get_films()
+    if resp.status_code == 200:
+        films = resp.json()
+        if films:
+            cols = st.columns(3)
+            for i, film in enumerate(films):
+                with cols[i % 3]:
+                    render_film_card(film)
+        else:
+            st.info("Фильмов пока нет")
     else:
-        try:
-            resp = register(email, password)
-            if resp.status_code == 201:
-                st.success("Регистрация успешна! Теперь войдите.")
-                st.switch_page("pages/login.py")
-            else:
-                st.error(get_error_message(resp))
-        except requests.RequestException:
-            st.error("недоступно")
+        st.error(get_error_message(resp))
+except requests.RequestException:
+    st.error("недоступно")

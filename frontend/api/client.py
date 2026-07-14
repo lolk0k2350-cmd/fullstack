@@ -6,6 +6,7 @@ BACKEND_URL = "http://127.0.0.1:8000"
 def register(email, password):
     return requests.post(f"{BACKEND_URL}/auth/register", json={"email": email, "password": password})
 
+
 def login(email, password):
     return requests.post(f"{BACKEND_URL}/auth/login", json={"email": email, "password": password})
 
@@ -27,7 +28,7 @@ def get_my_reviews():
     return request_with_auth("GET", f"{BACKEND_URL}/users/me/reviews")
 
 def get_my_profile():
-    return request_with_auth("GET", f"{BACKEND_URL}/profile/")
+    return request_with_auth("GET", f"{BACKEND_URL}/profile/me")
 
 def update_profile(payload):
     return request_with_auth("PATCH", f"{BACKEND_URL}/profile/", payload=payload)
@@ -58,6 +59,9 @@ def get_reviews(film_id):
 
 def create_review(film_id, text, rating):
     return request_with_auth("POST", f"{BACKEND_URL}/films/{film_id}/reviews", payload={"text": text, "rating": rating})
+
+def get_profile():
+    return request_with_auth("GET", f"{BACKEND_URL}/users/me")
 
 def get_error_message(response):
     try:

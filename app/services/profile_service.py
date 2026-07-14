@@ -11,20 +11,12 @@ class ProfileService:
     def __init__(self, db: Session):
         self.repo = ProfileRepository(db)
 
-    def create_profile(self, user_id: int, schema: ProfileCreate) -> dict:
+    def create_profile(self, user_id: int) -> dict:
         profile = Profile(
-            user_id=user_id,
-            bio=schema.bio,
-            avatar_url=schema.avatar_url,
+            user_id=user_id
         )
-        profile = self.repo.create(profile)
 
-        return {
-            "id": profile.id,
-            "bio": profile.bio,
-            "avatar_url": profile.avatar_url,
-            "user_id": profile.user_id,
-        }
+        return self.repo.create(profile)
 
     def get_profile_by_user(self, user_id: int) -> dict | None:
         profile = self.repo.get_by_user_id(user_id)

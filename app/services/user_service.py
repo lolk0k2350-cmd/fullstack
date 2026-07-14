@@ -5,12 +5,14 @@ from app.auth import hash_password
 from app.models.user import User, UserRole
 from app.repositories.user_repository import UserRepository
 from app.schemas.user import UserCreate
+from app.models.profile import Profile
 
 
 class UserService:
 
     def __init__(self, db: Session):
         self.repository = UserRepository(db)
+        self.db=db
 
     def create_user(self, schema: UserCreate) -> User:
         existing_user = self.repository.get_by_email(schema.email)

@@ -14,6 +14,7 @@ class ProfileRepository:
 
     def get_by_user_id(self, user_id: int) -> Profile | None:
         return self.db.query(Profile).filter(Profile.user_id == user_id).first()
+        
 
     def update(self, profile: Profile) -> Profile:
         self.db.add(profile)

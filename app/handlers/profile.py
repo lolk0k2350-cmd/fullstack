@@ -8,7 +8,7 @@ from app.schemas.profile import ProfileCreate, ProfileResponse, ProfileUpdate
 from app.services.profile_service import ProfileService
 from app.schemas.review import ReviewResponse
 from app.services.review_service import ReviewService
-
+from app.models.profile import Profile
 
 router = APIRouter(
     prefix="/profile",
@@ -39,17 +39,19 @@ def create_profile(
     "/me",
     response_model=ProfileResponse,
 )
-def get_my_profile(
+def get_profile(
     current_user: User = Depends(get_current_user),
-    service: ProfileService = Depends(get_profile_service),
+    db: Session = Depends(get_db),
 ):
-    profile = service.get_profile_by_user(current_user.id)
-    if profile is None:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Profile not found",
-        )
-    return profile
+    profile = db.query(Profile).filter(Profile.user_id == current_user.id).first()
+    return {
+        "id": current_user.id,
+        "email": current_user.email,
+        "role": current_user.role,
+        "is_active": current_user.is_active,
+        "bio": profile.bio if profile else None,
+        "avatar_url": profile.avatar_url if profile else None,
+            }
 
 
 @router.patch(

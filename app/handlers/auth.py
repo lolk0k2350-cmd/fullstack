@@ -6,6 +6,7 @@ from app.schemas.token import Token
 from app.schemas.user import UserCreate, UserLogin, UserResponse
 from app.services.auth_service import AuthService
 from app.services.user_service import UserService
+from app.services.profile_service import ProfileService
 
 router = APIRouter(
     prefix="/auth",
@@ -16,6 +17,8 @@ router = APIRouter(
 def get_user_service(db: Session = Depends(get_db)) -> UserService:
     return UserService(db)
 
+def get_profile_service(db: Session = Depends(get_db)) -> ProfileService:
+    return ProfileService(db)
 
 def get_auth_service(db: Session = Depends(get_db)) -> AuthService:
     return AuthService(db)
@@ -29,8 +32,15 @@ def get_auth_service(db: Session = Depends(get_db)) -> AuthService:
 def register_user(
     schema: UserCreate,
     service: UserService = Depends(get_user_service),
+    profile_service: ProfileService = Depends(get_profile_service)
 ):
-    return service.create_user(schema)
+
+    user = service.create_user(schema)
+    print("JHHHHHJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJ")
+    print(user.id)
+    profile_service.create_profile(user.id)
+    return user
+    
 
 
 @router.post(

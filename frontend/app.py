@@ -11,8 +11,7 @@ pages = {
     ],
     "Пользователь": [
         st.Page("pages/profile.py", title="Профиль", icon=":material/person:"),
-        st.Page("pages/my_reviews.py", title="Мои отзывы", icon=":material/comment:"),
-    ],
+            ],
     "Авторизация": [
         st.Page("pages/login.py", title="Вход", icon=":material/login:"),
         st.Page("pages/registration.py", title="Регистрация", icon=":material/person_add:"),

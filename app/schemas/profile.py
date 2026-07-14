@@ -15,6 +15,6 @@ class ProfileResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
     id: int
+    
     bio: str | None = None
     avatar_url: str | None = None
-    user_id: int
