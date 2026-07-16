@@ -54,6 +54,7 @@ class FilmService:
                 "id": film.id,
                 "title": film.title,
                 "description": film.description,
+                "poster_url": film.poster_url,
                 "genres": [
                     {
                         "id": g.id,
@@ -62,6 +63,7 @@ class FilmService:
                     }
                     for g in film.genres
                 ]
+
             })
         return result
 

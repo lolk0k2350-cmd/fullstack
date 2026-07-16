@@ -2,6 +2,7 @@ from pydantic import BaseModel, ConfigDict, Field
 
 
 class ProfileCreate(BaseModel):
+    username: str | None = None
     bio: str | None = Field(default=None, max_length=1000)
     avatar_url: str | None = Field(default=None, max_length=500)
 
@@ -9,6 +10,7 @@ class ProfileCreate(BaseModel):
 class ProfileUpdate(BaseModel):
     bio: str | None = Field(default=None, max_length=1000)
     avatar_url: str | None = Field(default=None, max_length=500)
+    username: str | None = Field(default=None, max_length=50)
 
 
 class ProfileResponse(BaseModel):

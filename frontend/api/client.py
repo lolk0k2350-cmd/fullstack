@@ -30,8 +30,8 @@ def get_my_reviews():
 def get_my_profile():
     return request_with_auth("GET", f"{BACKEND_URL}/profile/me")
 
-def update_profile(payload):
-    return request_with_auth("PATCH", f"{BACKEND_URL}/profile/", payload=payload)
+def update_profile(pld):
+    return request_with_auth("PATCH", f"{BACKEND_URL}/profile/", payload=pld)
 
 def get_films():
     return requests.get(f"{BACKEND_URL}/films")

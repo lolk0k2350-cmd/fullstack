@@ -27,13 +27,13 @@ def get_review_service(db:Session = Depends(get_db)) -> ReviewService:
     response_model=ProfileResponse,
     status_code=status.HTTP_201_CREATED,
 )
+@router.post("/", response_model=ProfileResponse, status_code=status.HTTP_201_CREATED)
 def create_profile(
     schema: ProfileCreate,
     current_user: User = Depends(get_current_user),
     service: ProfileService = Depends(get_profile_service),
 ):
-    return service.create_profile(current_user.id, schema)
-
+    return service.create_profile(schema, current_user)
 
 @router.get(
     "/me",
@@ -54,20 +54,10 @@ def get_profile(
             }
 
 
-@router.patch(
-    "/me",
-    response_model=ProfileResponse,
-)
+@router.patch("/")
 def update_my_profile(
     schema: ProfileUpdate,
     current_user: User = Depends(get_current_user),
     service: ProfileService = Depends(get_profile_service),
 ):
-    return service.update_profile(current_user.id, schema)
-
-@router.get("/me/reviews")
-def get_my_reviews(
-    current_user: User = Depends(get_current_user),
-    service: ProfileService = Depends(get_profile_service),
-):
-    return service.get_user_reviews(current_user.id)
+    return service.update_profile(schema, current_user)  # 👈 ПРАВИЛЬНЫЙ ПОРЯДОК

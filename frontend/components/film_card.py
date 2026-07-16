@@ -22,3 +22,8 @@ def render_film_card(film):
                         st.rerun()
                     else:
                         st.error(get_error_message(response))
+        print(film.get("poster_url"))
+        if film.get("poster_url"):
+            st.image(film["poster_url"], width=200)
+        else:
+            st.image("https://via.placeholder.com/200x300?text=Нет+постера", width=200)

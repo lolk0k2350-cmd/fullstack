@@ -26,6 +26,11 @@ if film.get("genres"):
 st.divider()
 st.subheader("Отзывы")
 
+if film.get("poster_url"):
+    st.image(film["poster_url"], width=400)
+else:
+    st.image("https://via.placeholder.com/400x600?text=Нет+постера", width=400)
+
 try:
     rev_resp = get_reviews(film_id)
     if rev_resp.status_code == 200:
@@ -58,3 +63,4 @@ if is_authenticated():
                 st.error("Напишите текст")
 else:
     st.warning("Авторизуйтесь, чтобы оставить отзыв")
+

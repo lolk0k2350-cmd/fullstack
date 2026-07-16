@@ -3,7 +3,8 @@ import requests
 from api.client import login, get_profile, get_error_message
 from auth.state import save_auth, clear_auth, is_authenticated
 
-st.header("Вход")
+st.header("🔐 Вход")
+
 if is_authenticated():
     st.info("Вы уже вошли.")
     st.switch_page("pages/catalog.py")
@@ -22,10 +23,11 @@ if submitted:
             if resp.status_code == 200:
                 token = resp.json()["access_token"]
                 st.session_state["access_token"] = token
+
                 profile_resp = get_profile()
                 if profile_resp.ok:
                     save_auth(token, profile_resp.json())
-                    st.success("Вход выполнен!")
+                    st.success("✅ Вход выполнен!")
                     st.switch_page("pages/catalog.py")
                 else:
                     clear_auth()
@@ -33,4 +35,4 @@ if submitted:
             else:
                 st.error(get_error_message(resp))
         except requests.RequestException:
-            st.error("недоступно")
+            st.error("❌")

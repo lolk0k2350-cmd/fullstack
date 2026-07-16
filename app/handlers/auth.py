@@ -4,6 +4,7 @@ from sqlalchemy.orm import Session
 from app.database import get_db
 from app.schemas.token import Token
 from app.schemas.user import UserCreate, UserLogin, UserResponse
+from app.schemas.profile import ProfileCreate 
 from app.services.auth_service import AuthService
 from app.services.user_service import UserService
 from app.services.profile_service import ProfileService
@@ -34,13 +35,16 @@ def register_user(
     service: UserService = Depends(get_user_service),
     profile_service: ProfileService = Depends(get_profile_service)
 ):
-
     user = service.create_user(schema)
-    print("JHHHHHJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJJ")
     print(user.id)
-    profile_service.create_profile(user.id)
-    return user
     
+  
+    profile_service.create_profile(
+        schema=ProfileCreate(),  
+        user=user
+    )
+    
+    return user
 
 
 @router.post(
