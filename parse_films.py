@@ -3,7 +3,7 @@ import requests
 from pathlib import Path
 
 API_TOKEN = "5b3b806d-ab25-46d0-b8b4-4bfab210b274"
-SEARCH_QUERY = "холоп"
+SEARCH_QUERY = ""
 
 OUTPUT_FILE = Path("data/films.json")
 

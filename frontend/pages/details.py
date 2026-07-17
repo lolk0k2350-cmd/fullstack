@@ -2,6 +2,7 @@ import streamlit as st
 import requests
 from api.client import get_film, get_reviews, create_review, get_error_message
 from auth.state import is_authenticated
+from components.star_rating import render_stars
 
 film_id = st.session_state.get("selected_film_id")
 if not film_id:
@@ -23,13 +24,13 @@ st.write(film.get("description", ""))
 if film.get("genres"):
     st.write("**Жанры:** " + ", ".join([g["name"] for g in film["genres"]]))
 
-st.divider()
-st.subheader("Отзывы")
-
 if film.get("poster_url"):
     st.image(film["poster_url"], width=400)
 else:
     st.image("https://via.placeholder.com/400x600?text=Нет+постера", width=400)
+
+st.divider()
+st.subheader("📝 Отзывы")
 
 try:
     rev_resp = get_reviews(film_id)
@@ -37,7 +38,7 @@ try:
         reviews = rev_resp.json()
         if reviews:
             for r in reviews:
-                st.write(f"⭐ **{r['rating']}/10**")
+                render_stars(r["rating"], max_rating=10, size=20)
                 st.write(r["text"])
                 st.divider()
         else:
@@ -50,12 +51,14 @@ except requests.RequestException:
 if is_authenticated():
     with st.form("review_form"):
         rating = st.slider("Оценка", 1, 10, 5)
-        text = st.text_area("Текст")
-        if st.form_submit_button("Отправить отзыв"):
-            if text:
+        text = st.text_area("Текст отзыва", placeholder="Напишите ваш отзыв...")
+        submitted = st.form_submit_button("✉️ Отправить отзыв")
+
+        if submitted:
+            if text.strip():
                 resp = create_review(film_id, text, rating)
                 if resp.status_code == 201:
-                    st.success("Отзыв добавлен!")
+                    st.success("✅ Отзыв добавлен!")
                     st.rerun()
                 else:
                     st.error(get_error_message(resp))
@@ -63,4 +66,3 @@ if is_authenticated():
                 st.error("Напишите текст")
 else:
     st.warning("Авторизуйтесь, чтобы оставить отзыв")
-

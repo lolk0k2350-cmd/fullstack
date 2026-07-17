@@ -2,6 +2,7 @@ import streamlit as st
 import requests
 from api.client import get_my_profile, get_my_reviews, get_error_message
 from auth.state import require_login, clear_auth, current_profile, save_auth
+from components.star_rating import render_stars
 
 require_login()
 st.header("👤 Мой профиль")
@@ -25,14 +26,16 @@ print(profile)
 col1, col2 = st.columns([1, 2])
 
 with col1:
-    if profile.get("avatar_url"):
-        st.image(profile["avatar_url"], width=150)
+    avatar = profile.get("avatar_url")
+    if avatar and avatar.startswith(("http://", "https://")):
+        st.image(avatar, width=150)
     else:
         st.image("https://via.placeholder.com/150x150?text=Аватар", width=150)
 
 with col2:
     st.subheader(profile.get("username") or "Без никнейма")
     st.write(f"📧 {profile.get('email')}")
+    
     st.write(f"🔑 Роль: {profile.get('role')}")
     if profile.get("bio"):
         st.write(f"📝 {profile.get('bio')}")
@@ -60,6 +63,7 @@ with st.expander("✏️ Редактировать профиль"):
                     resp = update_profile(payload)
                     if resp and resp.ok:
                         st.success("✅ Профиль обновлён!")
+                        
                         st.rerun()
                     else:
                         st.error(get_error_message(resp) if resp else "Ошибка")
@@ -77,7 +81,8 @@ try:
         reviews = resp.json()
         if reviews:
             for r in reviews:
-                st.write(f"⭐ **{r['rating']}/10**")
+                # ⭐ ЗВЁЗДЫ ВМЕСТО ⭐ 8/10
+                render_stars(r["rating"], max_rating=10, size=20)
                 st.write(r["text"])
                 st.caption(f"К фильму ID: {r.get('film_id')} | {r.get('created_at', '')[:10]}")
                 st.divider()

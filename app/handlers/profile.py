@@ -41,17 +41,9 @@ def create_profile(
 )
 def get_profile(
     current_user: User = Depends(get_current_user),
-    db: Session = Depends(get_db),
+    service: ProfileService = Depends(get_profile_service),
 ):
-    profile = db.query(Profile).filter(Profile.user_id == current_user.id).first()
-    return {
-        "id": current_user.id,
-        "email": current_user.email,
-        "role": current_user.role,
-        "is_active": current_user.is_active,
-        "bio": profile.bio if profile else None,
-        "avatar_url": profile.avatar_url if profile else None,
-            }
+    return service.get_profile(current_user.id)
 
 
 @router.patch("/")
